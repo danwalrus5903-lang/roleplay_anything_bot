@@ -1,0 +1,23 @@
+services:
+  mongodb:
+    image: mongo:8.0
+    command:
+      - "--auth"
+      - "--bind_ip_all"
+      - "--setParameter=enableLocalhostAuthBypass=false"
+    restart: unless-stopped
+    container_name: telegram_rp_bot_mongo_dev
+    ports:
+      - "127.0.0.1:27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_ADMIN_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_ADMIN_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mongo_data_dev:/data/db
+      - ./init/01-init-app-user.js:/docker-entrypoint-initdb.d/01-init-app-user.js:ro
+
+volumes:
+  mongo_data_dev:
